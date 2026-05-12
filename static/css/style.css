@@ -1,0 +1,178 @@
+/* ============================================================
+   CSS DESIGN SYSTEM — Metal Defect Inspection GUI
+   Premium glassmorphism dark-mode with industrial aesthetics
+   ============================================================ */
+
+:root {
+    --primary: #6366F1;
+    --primary-glow: rgba(99, 102, 241, 0.35);
+    --primary-hover: #818CF8;
+    --secondary: #34D399;
+    --secondary-glow: rgba(52, 211, 153, 0.3);
+    --danger: #F87171;
+    --danger-glow: rgba(248, 113, 113, 0.3);
+    --dark: #0F172A;
+    --dark-card: #1E293B;
+    --dark-surface: #334155;
+    --light-text: #E2E8F0;
+    --muted-text: #94A3B8;
+    --border: rgba(148, 163, 184, 0.15);
+    --glass-bg: rgba(30, 41, 59, 0.75);
+    --glass-border: rgba(148, 163, 184, 0.12);
+
+    --radius: 16px;
+    --radius-sm: 10px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0F172A 0%, #1e1b4b 50%, #0F172A 100%);
+    color: var(--light-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    z-index: 1;
+}
+
+h1 {
+    text-align: center;
+    font-weight: 800;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 2.5rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Drag and Drop Area */
+.upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 1.5rem;
+}
+
+.upload-area.dragover {
+    border-color: var(--primary);
+    background: var(--primary-glow);
+    transform: scale(1.02);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.upload-text {
+    font-weight: 500;
+    color: var(--muted-text);
+}
+
+.upload-text span {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+#image-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: var(--radius-sm);
+    margin-top: 1.5rem;
+    display: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Result Section */
+.result-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-label {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.result-confidence {
+    font-size: 1rem;
+    color: var(--muted-text);
+}
+
+.status-good {
+    color: var(--secondary);
+}
+
+.status-defect {
+    color: var(--danger);
+}
+
+/* Loading Spinner */
+.spinner {
+    display: none;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    margin: 1rem auto;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}

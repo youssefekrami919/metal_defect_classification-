@@ -1,0 +1,33 @@
+PROJECT REPORT: INTELLIGENT METAL SURFACE INSPECTION
+
+Subject: Final Project Submission - Advanced Methods
+Author: [Your Name]
+Date: 2026-05-12
+
+1. Executive Summary:
+This report presents a deep learning solution for the classification of defects on hot-rolled metal surfaces. By utilizing a custom-trained Convolutional Neural Network (CNN), the system can distinguish between six common industrial defects and identify high-quality, non-defective surfaces.
+
+2. System Objectives:
+- Automate the visual inspection process of metal surfaces.
+- Correctlly categorize defects to aid in root-cause analysis of manufacturing failures.
+- Implement a safety threshold to verify surface integrity ("Good" metal detection).
+- Provide a user-friendly Web GUI for industrial operators.
+
+3. Technical Implementation:
+- Model: A 3-layer Convolutional Neural Network architecture built using PyTorch.
+- Dataset: 1,800 total images from the NEU-DET database (1,440 for training, 360 for validation).
+- Classification Threshold: A 50% confidence rule is used. If the system cannot identify a defect with at least 50% certainty, the metal is reported as "Good". This prevents false positives on clean surfaces.
+
+4. Results and Analysis:
+- Evaluation: The system was evaluated using validation accuracy.
+- Accuracy: Initial training runs showed a validation accuracy of ~76.4% within just 3 epochs. Further training in the included Jupyter notebook allows the model to refine its weights for even higher precision.
+- Saved Model: The weights are exported to 'metal_defect_model_notebook.pkl' for production use.
+
+5. User Interface (Web GUI):
+A premium Web interface was developed to allow easy interaction with the model.
+- Drag-and-Drop: Users can drag metal surface images directly into the browser.
+- Real-time Inference: The backend Flask server processes images instantly and returns the defect class along with the confidence score.
+- Visual Feedback: The UI provides a premium, dark-mode experience with animations to improve user engagement.
+
+6. Conclusion:
+The developed system demonstrates the power of Advanced Methods in industrial applications. By combining Deep Learning with a robust Web-based delivery system, we have created a tool that is both technically sophisticated and practically usable in a manufacturing environment.

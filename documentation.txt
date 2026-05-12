@@ -1,0 +1,46 @@
+PROJECT DOCUMENTATION: METAL DEFECT CLASSIFICATION SYSTEM
+
+1. System Overview:
+The system is an automated quality control tool designed to classify surface defects on hot-rolled steel. It uses a Convolutional Neural Network (CNN) to identify six distinct defect categories and incorporates an intelligent thresholding logic to determine if a surface is "Good".
+
+2. Dataset Details:
+- Source: NEU-DET (Northeastern University Surface Defect Database).
+- Total Images: 1,800 images.
+- Training Set: 1,440 images (240 images per class).
+- Validation Set: 360 images (60 images per class).
+- Image Size: 200x200 pixels (standardized to 224x224 during preprocessing).
+
+3. Classes Identified:
+- Crazing (Cr)
+- Inclusion (In)
+- Patches (Pa)
+- Pitted Surface (Ps)
+- Rolled-in Scale (Rs)
+- Scratches (Sc)
+
+4. Model Architecture (SimpleCNN):
+- Feature Extractor:
+  * Conv Layer 1: 3x3 kernel, 16 filters, ReLU, MaxPool2d (2x2).
+  * Conv Layer 2: 3x3 kernel, 32 filters, ReLU, MaxPool2d (2x2).
+  * Conv Layer 3: 3x3 kernel, 64 filters, ReLU, MaxPool2d (2x2).
+- Classifier:
+  * Flatten Layer.
+  * Fully Connected 1: 256 units, ReLU activation.
+  * Dropout Layer: 0.5 probability (to prevent overfitting).
+  * Output Layer: 6 units (one for each defect class).
+
+5. Performance and Accuracy:
+- Training Accuracy: The model achieves consistent improvement across training epochs.
+- Validation Accuracy: In initial 3-epoch tests, the model reached approximately 76.39% accuracy. 
+- Target Accuracy: With full 10-epoch training in the provided notebook, accuracy is expected to exceed 90%.
+
+6. Intelligent Classification ("Good" Metal):
+- Logic: The model calculates a Softmax probability for each of the 6 defect classes.
+- Threshold: A confidence threshold of 50% (0.50) is applied.
+- Result: If the highest predicted defect probability is less than 50%, the system concludes that no significant defect is present and classifies the metal as "Good" (المعدن ده كويس).
+
+7. Web Interface:
+- Technology: Flask (Backend), HTML5/CSS3/JS (Frontend).
+- Design: Premium Glassmorphism UI with Dark Mode support.
+- Interaction: Supports drag-and-drop image uploads for real-time inference.
+- Model Integration: Loads the 'metal_defect_model_notebook.pkl' file for predictions.

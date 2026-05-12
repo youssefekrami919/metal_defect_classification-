@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metal Defect Inspection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Metal Inspection AI</h1>
+        
+        <div class="card">
+            <div class="upload-area" id="drop-area">
+                <span class="upload-icon">📁</span>
+                <p class="upload-text">Drag & Drop metal surface photo here or <span>browse</span></p>
+                <input type="file" id="file-input" hidden accept="image/*">
+            </div>
+
+            <div class="spinner" id="spinner"></div>
+
+            <div class="preview-container">
+                <img id="image-preview" src="#" alt="Preview">
+            </div>
+
+            <div class="result-box" id="result-box">
+                <div class="result-label" id="res-label">Defect Type</div>
+                <div class="result-confidence" id="res-conf">Confidence: 0%</div>
+            </div>
+        </div>
+
+        <footer>
+            &copy; 2026 Advanced Methods Project | Metal Defect Classification
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
