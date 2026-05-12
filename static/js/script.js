@@ -369,13 +369,48 @@ async function uploadVideo(file) {
     }
 }
 
+let videoStatusInterval;
+
 function startStream(filename) {
     videoDropArea.style.display = 'none';
     videoContainer.style.display = 'block';
     videoStream.src = `/video_feed?filename=${filename}`;
+    document.getElementById('current-video-name').innerText = filename;
+
+    // Start polling for video status
+    if (videoStatusInterval) clearInterval(videoStatusInterval);
+    videoStatusInterval = setInterval(updateVideoMonitor, 200);
+}
+
+async function updateVideoMonitor() {
+    try {
+        const response = await fetch('/video_status');
+        const data = await response.json();
+        
+        const labelEl = document.getElementById('vid-res-label');
+        const barEl = document.getElementById('vid-res-bar');
+        const confEl = document.getElementById('vid-res-conf');
+
+        labelEl.innerText = data.class;
+        const confPercent = (data.confidence * 100).toFixed(1);
+        confEl.innerText = `${confPercent}%`;
+        barEl.style.width = `${confPercent}%`;
+
+        // Color Logic
+        if (data.class.includes('Good')) {
+            labelEl.style.color = 'var(--secondary)';
+            barEl.style.background = 'var(--secondary)';
+        } else {
+            labelEl.style.color = 'var(--danger)';
+            barEl.style.background = 'var(--danger)';
+        }
+    } catch (error) {
+        console.error('Error fetching video status:', error);
+    }
 }
 
 function stopVideo() {
+    if (videoStatusInterval) clearInterval(videoStatusInterval);
     videoStream.src = "";
     videoContainer.style.display = 'none';
     videoDropArea.style.display = 'block';

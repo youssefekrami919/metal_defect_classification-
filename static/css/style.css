@@ -489,6 +489,108 @@ h1 {
     font-style: italic;
 }
 
+/* Video Analysis Monitor */
+#video-stream {
+    display: block;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.video-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    max-width: 600px;
+    margin: 0 auto 1rem auto;
+}
+
+.live-indicator {
+    color: var(--danger);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.live-indicator i {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.video-filename {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+
+.video-monitor {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.monitor-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.monitor-row:last-child {
+    margin-bottom: 0;
+}
+
+.monitor-label {
+    font-size: 0.85rem;
+    color: var(--muted-text);
+}
+
+.monitor-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--secondary);
+}
+
+.monitor-progress-bg {
+    flex-grow: 1;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 1rem;
+    overflow: hidden;
+}
+
+.monitor-progress-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.monitor-percent {
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 45px;
+    text-align: right;
+}
+
 .btn-danger {
     background: var(--danger);
     color: white;

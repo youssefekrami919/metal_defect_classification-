@@ -180,9 +180,30 @@
                 </div>
 
                 <div class="video-container" id="video-container" style="display:none;">
-                    <h3>Real-time Classification Feed</h3>
-                    <img id="video-stream" src="" style="width:100%; border-radius:10px; margin-top:1rem;">
-                    <button class="btn btn-danger" style="margin-top:1rem;" onclick="stopVideo()">Stop Stream</button>
+                    <div class="video-header">
+                        <span class="live-indicator"><i class="fas fa-circle"></i> LIVE ANALYSIS</span>
+                        <span class="video-filename" id="current-video-name">Analyzing Feed...</span>
+                    </div>
+                    
+                    <img id="video-stream" src="">
+
+                    <div class="video-monitor">
+                        <div class="monitor-row">
+                            <span class="monitor-label">Classification Verdict</span>
+                            <span class="monitor-value" id="vid-res-label">Scanning...</span>
+                        </div>
+                        <div class="monitor-row">
+                            <span class="monitor-label">AI Confidence</span>
+                            <div class="monitor-progress-bg">
+                                <div class="monitor-progress-bar" id="vid-res-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="monitor-percent" id="vid-res-conf">0%</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-danger" style="margin: 1.5rem auto 0 auto; width: 100%; max-width: 600px; display: block;" onclick="stopVideo()">
+                        <i class="fas fa-stop-circle"></i> Terminate Stream
+                    </button>
                 </div>
             </div>
         </div>

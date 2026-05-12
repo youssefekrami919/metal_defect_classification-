@@ -35,6 +35,9 @@ session_stats = {
     }
 }
 
+# --- Video Tracking ---
+latest_video_status = {"class": "Waiting for data...", "confidence": 0.0}
+
 # --- Web Routes ---
 @app.route('/')
 def index():
@@ -101,9 +104,12 @@ def generate_frames(video_path):
         max_prob, predicted_idx = torch.max(probabilities, 0)
         label = predictor.classes[predicted_idx.item()] if max_prob.item() >= 0.5 else "Good (المعدن ده كويس)"
         
-        color = (0, 255, 0) if "Good" in label else (0, 0, 255)
-        cv2.putText(frame, f"Result: {label}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
-        cv2.putText(frame, f"Conf: {max_prob.item():.2f}", (20, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+        # Update global status instead of drawing on frame
+        global latest_video_status
+        latest_video_status = {
+            "class": label,
+            "confidence": round(max_prob.item(), 4)
+        }
         
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
@@ -116,6 +122,10 @@ def video_feed():
     video_filename = request.args.get('filename')
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], video_filename)
     return Response(generate_frames(video_path), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/video_status')
+def video_status():
+    return jsonify(latest_video_status)
 
 @app.route('/upload_video', methods=['POST'])
 def upload_video():
