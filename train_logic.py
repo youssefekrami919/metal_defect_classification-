@@ -65,31 +65,94 @@ def run_training(epochs=5):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
+    # Initial Class Distribution Counting
+    def count_classes(dataset):
+        counts = {cls: 0 for cls in dataset.classes}
+        for path in dataset.image_paths:
+            filename = os.path.basename(path)
+            if "rolled-in_scale" in filename: cls = "rolled-in_scale"
+            elif "pitted_surface" in filename: cls = "pitted_surface"
+            else: cls = filename.split('_')[0]
+            if cls in counts: counts[cls] += 1
+        return counts
+
+    history = {
+        "epochs": [],
+        "accuracy": [],
+        "loss": [],
+        "methods": {
+            "architecture": "3-Layer CNN",
+            "optimizer": "Adam",
+            "loss_function": "CrossEntropy",
+            "learning_rate": 0.001,
+            "batch_size": 32,
+            "framework": "PyTorch",
+            "preprocessing": "Normalization & Resize"
+        },
+        "dataset_distribution": {
+            "train": count_classes(train_dataset),
+            "val": count_classes(val_dataset)
+        },
+        "class_performance": {}
+    }
+
     best_acc = 0.0
     for epoch in range(epochs):
         model.train()
+        total_loss = 0
         progress_bar = tqdm(train_loader, desc=f'Epoch {epoch+1}/{epochs}')
         for images, labels in progress_bar:
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad()
-            loss = criterion(model(images), labels)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+            total_loss += loss.item()
+        
+        avg_loss = total_loss / len(train_loader)
         
         model.eval()
         correct, total = 0, 0
+        class_correct = {cls: 0 for cls in train_dataset.classes}
+        class_total = {cls: 0 for cls in train_dataset.classes}
+        
         with torch.no_grad():
             for images, labels in val_loader:
                 images, labels = images.to(device), labels.to(device)
                 _, predicted = torch.max(model(images), 1)
                 total += labels.size(0); correct += (predicted == labels).sum().item()
+                
+                for i in range(labels.size(0)):
+                    label = labels[i].item()
+                    cls_name = train_dataset.classes[label]
+                    class_total[cls_name] += 1
+                    if predicted[i] == labels[i]:
+                        class_correct[cls_name] += 1
         
         val_acc = 100 * correct / total
         print(f'Validation Accuracy: {val_acc:.2f}%')
+        
+        history["epochs"].append(epoch + 1)
+        history["accuracy"].append(round(val_acc, 2))
+        history["loss"].append(round(avg_loss, 3))
+        
+        # Save per-class accuracy for the last epoch or best model
+        if val_acc >= best_acc:
+            history["class_performance"] = {
+                cls: round(100 * class_correct[cls] / class_total[cls], 2) if class_total[cls] > 0 else 0
+                for cls in train_dataset.classes
+            }
+
         if val_acc > best_acc:
             best_acc = val_acc
             torch.save(model.state_dict(), 'metal_defect_model_notebook.pkl')
             print("Model saved to metal_defect_model_notebook.pkl")
     
+    # Save History to JSON
+    import json
+    with open('training_history.json', 'w') as f:
+        json.dump(history, f, indent=4)
+
     print("--- Training Completed ---")
     return True

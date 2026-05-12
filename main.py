@@ -19,6 +19,22 @@ app.config['MAX_CONTENT_LENGTH'] = 64 * 1024 * 1024 # 64MB
 # Global predictor (will be initialized in start_project)
 predictor = None
 
+# --- Session Statistics ---
+session_stats = {
+    "total_inspections": 0,
+    "defects_found": 0,
+    "avg_confidence": 0.0,
+    "defect_counts": {
+        "crazing": 0,
+        "inclusion": 0,
+        "patches": 0,
+        "pitted_surface": 0,
+        "rolled-in_scale": 0,
+        "scratches": 0,
+        "Good": 0
+    }
+}
+
 # --- Web Routes ---
 @app.route('/')
 def index():
@@ -36,7 +52,35 @@ def predict_route():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)
         result = predictor.predict(filepath)
+        
+        # Update Stats
+        global session_stats
+        session_stats["total_inspections"] += 1
+        conf = result.get("confidence", 0)
+        session_stats["avg_confidence"] = (session_stats["avg_confidence"] * (session_stats["total_inspections"] - 1) + conf) / session_stats["total_inspections"]
+        
+        pred_class = result.get("class", "Good")
+        clean_class = "Good" if "Good" in pred_class else pred_class
+        if clean_class in session_stats["defect_counts"]:
+            session_stats["defect_counts"][clean_class] += 1
+            if clean_class != "Good":
+                session_stats["defects_found"] += 1
+        
         return jsonify(result)
+
+@app.route('/dashboard_stats')
+def dashboard_stats():
+    return jsonify(session_stats)
+
+@app.route('/training_info')
+def training_info():
+    try:
+        import json
+        with open('training_history.json', 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except:
+        return jsonify({"error": "Training history not found"}), 404
 
 def generate_frames(video_path):
     cap = cv2.VideoCapture(video_path)

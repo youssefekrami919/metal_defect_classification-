@@ -5,18 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metal Defect Inspection System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Metal Inspection AI</h1>
+        <h1><i class="fas fa-microscope"></i> Metal Inspection AI</h1>
         
         <div class="tabs">
-            <button class="tab-btn active" onclick="openTab('image-tab')">Image Analysis</button>
-            <button class="tab-btn" onclick="openTab('video-tab')">Video Analysis</button>
+            <button class="tab-btn active" onclick="openTab(event, 'dashboard-tab')">Analytics Dashboard</button>
+            <button class="tab-btn" onclick="openTab(event, 'image-tab')">Image Analysis</button>
+            <button class="tab-btn" onclick="openTab(event, 'video-tab')">Video Analysis</button>
         </div>
 
-        <div id="image-tab" class="tab-content active">
+        <div id="dashboard-tab" class="tab-content active">
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <i class="fas fa-search stat-icon"></i>
+                    <div class="stat-value" id="stat-total">0</div>
+                    <div class="stat-label">Total Inspections</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-exclamation-triangle stat-icon status-defect"></i>
+                    <div class="stat-value" id="stat-defects">0</div>
+                    <div class="stat-label">Defects Detected</div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-percentage stat-icon"></i>
+                    <div class="stat-value" id="stat-accuracy">0%</div>
+                    <div class="stat-label">Avg. Confidence</div>
+                </div>
+            </div>
+
+            <div class="dashboard-main">
+                <div class="card chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Defect Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="defectChart"></canvas>
+                    </div>
+                </div>
+                <div class="card visual-card">
+                    <h3><i class="fas fa-microchip"></i> Real-time Scanner (Digital Twin)</h3>
+                    <div class="scene">
+                        <div class="metal-slab" id="metal-slab">
+                            <div class="slab-face slab-front">
+                                <div class="scanner-line" id="scanner-line"></div>
+                                <span id="slab-status">SYSTEM READY</span>
+                            </div>
+                            <div class="slab-face slab-back"></div>
+                            <div class="slab-face slab-right"></div>
+                            <div class="slab-face slab-left"></div>
+                            <div class="slab-face slab-top"></div>
+                            <div class="slab-face slab-bottom"></div>
+                        </div>
+                    </div>
+                    <div class="slab-legend">
+                        <span class="legend-item"><i class="fas fa-circle status-good"></i> Optimal</span>
+                        <span class="legend-item"><i class="fas fa-circle status-defect"></i> Anomalous</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-performance">
+                <div class="card perf-card">
+                    <h3><i class="fas fa-microchip"></i> Hardware Performance</h3>
+                    <div class="perf-grid">
+                        <div class="perf-item">
+                            <span class="p-value" id="p-latency">102.1ms</span>
+                            <span class="p-label">Inference Latency</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="p-value" id="p-fps">10 FPS</span>
+                            <span class="p-label">System Throughput</span>
+                        </div>
+                    </div>
+                    <div class="perf-footer">
+                        <i class="fas fa-info-circle"></i> Benchmarked on <span id="p-cpu">Intel i7-1165G7</span>
+                    </div>
+                </div>
+                <div class="card perf-card">
+                    <h3><i class="fas fa-balance-scale"></i> Decision Logic</h3>
+                    <div class="perf-grid">
+                        <div class="perf-item">
+                            <span class="p-value">T = 0.50</span>
+                            <span class="p-label">Probabilistic Threshold</span>
+                        </div>
+                        <div class="perf-item">
+                            <span class="p-value">Softmax</span>
+                            <span class="p-label">Inference Engine</span>
+                        </div>
+                    </div>
+                    <div class="perf-footer">
+                        <i class="fas fa-shield-alt"></i> Balancing Type I (False +) & Type II (False -) Errors
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-training">
+                <div class="card training-chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Training Performance (History)</h3>
+                    <div class="chart-container-large">
+                        <canvas id="trainingChart"></canvas>
+                    </div>
+                </div>
+                <div class="card methods-card">
+                    <h3><i class="fas fa-tools"></i> Advanced Methods & Config</h3>
+                    <div class="methods-grid">
+                        <div class="method-item">
+                            <span class="m-label">Architecture</span>
+                            <span class="m-value" id="m-arch">-</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="m-label">Optimizer</span>
+                            <span class="m-value" id="m-opt">-</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="m-label">Loss Function</span>
+                            <span class="m-value" id="m-loss">-</span>
+                        </div>
+                        <div class="method-item">
+                            <span class="m-label">Dim. Reduction</span>
+                            <span class="m-value" id="m-dim">-</span>
+                        </div>
+                    </div>
+                    <div class="methods-footer">
+                        <p>Leveraging **AdamW** stochastic optimization and **CIoU Loss** for high-fidelity spatial regression and classification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-class-metrics">
+                <div class="card">
+                    <h3><i class="fas fa-chart-bar"></i> Per-Class Accuracy (%)</h3>
+                    <div class="chart-container-large">
+                        <canvas id="classPerfChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-database"></i> Dataset Distribution</h3>
+                    <div class="chart-container-large">
+                        <canvas id="distChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="image-tab" class="tab-content">
             <div class="card">
                 <div class="upload-area" id="drop-area">
                     <span class="upload-icon">📁</span>
