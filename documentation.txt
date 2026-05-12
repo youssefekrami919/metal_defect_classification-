@@ -44,3 +44,9 @@ The system is an automated quality control tool designed to classify surface def
 - Design: Premium Glassmorphism UI with Dark Mode support.
 - Interaction: Supports drag-and-drop image uploads for real-time inference.
 - Model Integration: Loads the 'metal_defect_model_notebook.pkl' file for predictions.
+
+8. Video Analysis (Real-time):
+- The system now supports continuous video stream analysis.
+- Implementation: Uses OpenCV to decode video frames, which are then passed through the CNN model.
+- Real-time Overlay: The classification results (Label and Confidence) are overlaid directly on each video frame using OpenCV.
+- Feedback: The UI allows users to upload an inspection video and view the live analysis feed.

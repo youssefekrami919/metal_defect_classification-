@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metal Defect Inspection</title>
+    <title>Metal Defect Inspection System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
@@ -11,27 +11,50 @@
     <div class="container">
         <h1>Metal Inspection AI</h1>
         
-        <div class="card">
-            <div class="upload-area" id="drop-area">
-                <span class="upload-icon">📁</span>
-                <p class="upload-text">Drag & Drop metal surface photo here or <span>browse</span></p>
-                <input type="file" id="file-input" hidden accept="image/*">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab('image-tab')">Image Analysis</button>
+            <button class="tab-btn" onclick="openTab('video-tab')">Video Analysis</button>
+        </div>
+
+        <div id="image-tab" class="tab-content active">
+            <div class="card">
+                <div class="upload-area" id="drop-area">
+                    <span class="upload-icon">📁</span>
+                    <p class="upload-text">Drag & Drop metal surface photo here or <span>browse</span></p>
+                    <input type="file" id="file-input" hidden accept="image/*">
+                </div>
+
+                <div class="spinner" id="spinner"></div>
+
+                <div class="preview-container">
+                    <img id="image-preview" src="#" alt="Preview">
+                </div>
+
+                <div class="result-box" id="result-box">
+                    <div class="result-label" id="res-label">Defect Type</div>
+                    <div class="result-confidence" id="res-conf">Confidence: 0%</div>
+                </div>
             </div>
+        </div>
 
-            <div class="spinner" id="spinner"></div>
+        <div id="video-tab" class="tab-content">
+            <div class="card">
+                <div class="upload-area" id="video-drop-area">
+                    <span class="upload-icon">🎥</span>
+                    <p class="upload-text">Upload inspection video to analyze in real-time</p>
+                    <input type="file" id="video-file-input" hidden accept="video/*">
+                </div>
 
-            <div class="preview-container">
-                <img id="image-preview" src="#" alt="Preview">
-            </div>
-
-            <div class="result-box" id="result-box">
-                <div class="result-label" id="res-label">Defect Type</div>
-                <div class="result-confidence" id="res-conf">Confidence: 0%</div>
+                <div class="video-container" id="video-container" style="display:none;">
+                    <h3>Real-time Classification Feed</h3>
+                    <img id="video-stream" src="" style="width:100%; border-radius:10px; margin-top:1rem;">
+                    <button class="btn btn-danger" style="margin-top:1rem;" onclick="stopVideo()">Stop Stream</button>
+                </div>
             </div>
         </div>
 
         <footer>
-            &copy; 2026 Advanced Methods Project | Metal Defect Classification
+            &copy; 2026 Advanced Methods Project | Intelligent Metal Inspection System
         </footer>
     </div>
 

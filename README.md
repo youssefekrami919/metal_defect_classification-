@@ -1,44 +1,39 @@
-# Metal Surface Defect Classification
+# Metal Surface Defect Classification System
 
-This project uses a Deep Learning (CNN) model to identify defects on metal surfaces. If no defect is clearly identified, the system classifies the surface as "Good".
+This project uses a Deep Learning (CNN) model to identify defects on metal surfaces in both static images and real-time video streams.
 
 ## Features
-- **Centralized System**: Run `main.py` to handle everything from training to launching the Web GUI.
-- **Classification**: Detects 6 types of defects (Crazing, Inclusion, Patches, Pitted Surface, Rolled-in Scale, Scratches).
+- **All-in-One Launcher**: Run `main.py` to train the model (if needed) and launch the Web GUI.
+- **Image & Video Analysis**: Dedicated tabs for analyzing static photos and inspection videos.
 - **"Good" Detection**: Automatically identifies a surface as "Good" (المعدن ده كويس) if the defect confidence is below 50%.
-- **Premium Web GUI**: Interactive dark-mode interface with drag-and-drop support.
+- **Premium Interface**: Modern dark-mode interface with drag-and-drop and real-time video overlays.
 
 ## Project Structure
-- `main.py`: The main entry point. Prepares the model and starts the web server.
-- `app.py`: Flask application logic.
-- `train_logic.py`: Contains the CNN architecture and training logic.
-- `train_model.ipynb`: Jupyter version of the training process (optional).
-- `test_model.ipynb`: Notebook for manual image testing.
-- `predict.py`: core prediction functions.
-- `documentation.txt` & `report.txt`: Project documentation and results.
+- `main.py`: The main entry point (Server + Logic).
+- `predict.py`: Core prediction class and model definitions.
+- `train_logic.py`: Training pipeline and dataset handling.
+- `test_model.ipynb`: Jupyter Notebook for manual testing of specific images.
+- `documentation.txt` & `report.txt`: Technical details and project results.
+- `static/` & `templates/`: Web interface assets.
 
-## Running Steps
+## Running the System
 
 ### 1. Preparation
 Ensure your dataset is located at:
 `E:\Semester 8\Advanced Methods\Project\data\NEU-DET`
 
-### 2. Launching the System
-Simply run the following command in your terminal:
+### 2. Launching
+Run the following command:
 ```bash
 python main.py
 ```
-
-**What happens next?**
-1. The script checks for the existence of `metal_defect_model_notebook.pkl`.
-2. If the file is missing, it will automatically start the training process and show a progress bar.
-3. Once the model is ready, it will launch the **Web GUI**.
-4. Open your browser at `http://127.0.0.1:5000` to start inspecting metal photos.
+1. If `metal_defect_model_notebook.pkl` is missing, the system will train itself first.
+2. The Web GUI will launch at `http://127.0.0.1:5000`.
 
 ## Requirements
 - Python 3.x
 - PyTorch & Torchvision
 - Flask
+- OpenCV (`opencv-python`)
 - PIL (Pillow)
 - tqdm
-- Jupyter Notebook
